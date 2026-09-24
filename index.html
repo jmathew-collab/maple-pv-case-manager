@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maple PV Case Manager v1.1</title>
+<style>
+:root{--bg:#f4f7f6;--panel:#fff;--ink:#17231f;--muted:#64716c;--line:#dce5e1;--brand:#2f6b5d;--brand2:#e7f2ee;--danger:#a33b3b;--warn:#9a6200;--shadow:0 2px 10px #183b3512}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:#183b35;color:#fff;padding:16px max(18px,calc((100vw - 1280px)/2));display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font-weight:800;font-size:20px}.sub{font-size:12px;opacity:.75}
+.app{max-width:1280px;margin:auto}.tabs{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:5px;padding:10px 14px;overflow:auto}
+.tab{white-space:nowrap;border:0;background:transparent;padding:10px 14px;border-radius:9px;color:#52615c;font-weight:700;cursor:pointer}.tab.active{background:var(--brand2);color:var(--brand)}
+main{padding:20px 14px 40px}.page{display:none}.page.active{display:block}
+.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(4,1fr)}.cols{grid-template-columns:1.4fr .6fr}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:var(--shadow)}
+h1,h2,h3{margin:0 0 14px}h2{font-size:20px}h3{font-size:15px}.muted{color:var(--muted);font-size:13px}.stat .num{font-size:30px;font-weight:800;margin:6px 0}
+button{font:inherit}.primary{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:10px 14px;font-weight:750;cursor:pointer}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-weight:650;cursor:pointer}.danger{color:var(--danger)}
+.toolbar{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:13px}.toolbar input,.toolbar select{max-width:280px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:700}
+.badge{display:inline-block;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:750;background:#eef2f0}.serious{background:#fdeaea;color:var(--danger)}.review{background:#fff3dc;color:var(--warn)}.good{background:#e8f5ee;color:#246446}
+.workflow{display:flex;gap:4px;overflow:auto;margin:8px 0 4px}.step{flex:1;min-width:105px;text-align:center;padding:10px 6px;background:#eef2f0;color:#68746f;font-size:11px;font-weight:750}.step.active{background:var(--brand);color:#fff}
+.form{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.full{grid-column:1/-1}label{display:block;font-size:12px;font-weight:750;color:#52615c;margin-bottom:5px}input,select,textarea{width:100%;border:1px solid #ccd8d3;border-radius:8px;padding:10px;background:#fff;font:inherit}textarea{min-height:110px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:15px;flex-wrap:wrap}
+.alert{padding:11px 13px;border-radius:9px;background:#fff3dc;color:#795000;font-size:13px}.success{background:#e9f6ee;color:#245e40}.ai{background:#edf7f3;border-left:4px solid var(--brand);padding:13px;border-radius:8px;font-size:13px}
+.search{flex:1;min-width:180px}.empty{text-align:center;padding:28px;color:var(--muted)}
+.modal{display:none;position:fixed;inset:0;background:#0007;z-index:20;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:14px;max-width:850px;width:100%;max-height:90vh;overflow:auto;padding:20px}.close{float:right;border:0;background:transparent;font-size:24px;cursor:pointer}
+@media(max-width:800px){.stats,.cols{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.full{grid-column:auto}.hide-mobile{display:none}}
+@media(max-width:520px){.stats{grid-template-columns:1fr 1fr}main{padding:13px 10px 30px}.card{padding:14px}.logo{font-size:17px}.sub{display:none}}
+</style>
+</head>
+<body>
+<header><div><div class="logo">🌱 Maple PV Case Manager</div><div class="sub">Pharmacovigilance case-processing prototype • v1.1</div></div><button class="secondary" onclick="newCasePage()">＋ New Case</button></header>
+<div class="app">
+<nav class="tabs" aria-label="Application navigation">
+<button class="tab active" data-page="dashboard">Dashboard</button>
+<button class="tab" data-page="newcase">New Case</button>
+<button class="tab" data-page="queue">Case Queue</button>
+<button class="tab" data-page="assistant">Maple AI</button>
+<button class="tab" data-page="audit">Audit Trail</button>
+</nav>
+<main>
+<section id="dashboard" class="page active">
+<div class="grid stats">
+<div class="card stat"><div class="muted">Open cases</div><div class="num" id="openCount">0</div><div class="muted">Active workflow</div></div>
+<div class="card stat"><div class="muted">Serious</div><div class="num" id="seriousCount">0</div><div class="muted">Human assessment required</div></div>
+<div class="card stat"><div class="muted">Due soon</div><div class="num" id="dueCount">0</div><div class="muted">Prototype 48-hour flag</div></div>
+<div class="card stat"><div class="muted">QC pending</div><div class="num" id="qcCount">0</div><div class="muted">Awaiting QC</div></div>
+</div>
+<div class="grid cols" style="margin-top:14px">
+<div class="card"><h2>Workflow</h2><div class="workflow"><div class="step active">Received</div><div class="step">Triage</div><div class="step">Data Entry</div><div class="step">Medical Review</div><div class="step">QC</div><div class="step">Approved</div><div class="step">Submitted</div></div><div style="margin-top:22px"><h3>Recent cases</h3><div id="recent"></div></div></div>
+<div class="card"><h2>Maple safety guardrails</h2><div class="ai"><b>Human-in-the-loop</b><br>AI suggestions are advisory only. The prototype does not make final causality, expectedness, reportability, seriousness, or regulatory decisions.</div><div style="margin-top:15px" class="muted">Learning loop: suggestion → human decision → evaluation → controlled learning record.</div></div>
+</div>
+</section>
+
+<section id="newcase" class="page">
+<div class="card"><h2>Create PV Case</h2><form id="caseForm"><div class="form">
+<div><label>Source / report type</label><select name="source"><option>Spontaneous report</option><option>Literature</option><option>Patient support program</option><option>Clinical study</option><option>Regulatory authority</option></select></div>
+<div><label>Initial receipt date</label><input name="receipt" type="date" required></div>
+<div><label>Patient age</label><input name="age" type="number" min="0" max="130"></div>
+<div><label>Patient sex</label><select name="sex"><option>Unknown</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+<div><label>Patient identifiable?</label><select name="patient"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
+<div><label>Reporter identifiable?</label><select name="reporter"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
+<div><label>Suspect product</label><input name="product" required placeholder="e.g., Drug X"></div>
+<div><label>Indication</label><input name="indication"></div>
+<div><label>Event verbatim</label><input name="event" required placeholder="e.g., difficulty breathing"></div>
+<div><label>Event onset</label><input name="onset" type="date"></div>
+<div><label>Outcome</label><select name="outcome"><option>Unknown</option><option>Recovered/resolved</option><option>Recovering/resolving</option><option>Not recovered/not resolved</option><option>Fatal</option><option>Recovered with sequelae</option></select></div>
+<div><label>Seriousness</label><select name="serious"><option>Not yet assessed</option><option>Non-serious</option><option>Serious</option></select></div>
+<div class="full"><label>Source narrative</label><textarea name="narrative" placeholder="Paste the source report here..."></textarea></div>
+</div><div class="actions"><button type="button" class="secondary" onclick="analyzeForm()">Maple: Analyze Draft</button><button class="primary">Create Case</button></div></form><div id="formAI" style="margin-top:13px"></div></div>
+</section>
+
+<section id="queue" class="page">
+<div class="card"><div class="toolbar"><div><h2 style="margin-bottom:3px">Case Queue</h2><div class="muted" id="queueCount"></div></div><input id="search" class="search" placeholder="Search case, product, event..." oninput="renderQueue()"><select id="filterStatus" onchange="renderQueue()"><option value="">All statuses</option><option>Triage</option><option>Data Entry</option><option>Medical Review</option><option>QC</option><option>Approved</option><option>Submitted</option><option>Closed</option></select></div><div id="queueTable"></div></div>
+<div class="card" style="margin-top:14px"><h2>Selected case</h2><div id="caseDetail" class="empty">Select a case from the queue.</div></div>
+</section>
+
+<section id="assistant" class="page">
+<div class="card"><h2>Maple AI Assistant</h2><p class="muted">Prototype extraction from source narrative. Verify every suggestion against the original source.</p><textarea id="aiText" placeholder="Example: A 67-year-old female started Drug X for hypertension. Two days later she developed difficulty breathing and was admitted to hospital."></textarea><div class="actions"><button class="primary" onclick="analyzeText()">Analyze Narrative</button></div><div id="aiOutput" style="margin-top:14px"></div></div>
+</section>
+
+<section id="audit" class="page"><div class="card"><h2>Audit Trail</h2><div id="auditTable"></div></div></section>
+</main></div>
+
+<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
+
+<script>
+const CASE_KEY='maplePV_v11_cases', AUDIT_KEY='maplePV_v11_audit';
+let cases=JSON.parse(localStorage.getItem(CASE_KEY)||'null');
+let audit=JSON.parse(localStorage.getItem(AUDIT_KEY)||'[]');
+if(!cases){cases=[
+{id:'PV-2026-0001',receipt:'2026-09-21',product:'Drug X',event:'Dyspnea',serious:'Serious',status:'Medical Review',source:'Spontaneous report',narrative:'Prototype seeded case.'},
+{id:'PV-2026-0002',receipt:'2026-09-22',product:'Drug Y',event:'Rash',serious:'Non-serious',status:'Data Entry',source:'Spontaneous report',narrative:'Prototype seeded case.'},
+{id:'PV-2026-0003',receipt:'2026-09-23',product:'Drug Z',event:'Nausea',serious:'Not yet assessed',status:'Triage',source:'Patient support program',narrative:'Prototype seeded case.'}];save();}
+function save(){localStorage.setItem(CASE_KEY,JSON.stringify(cases));localStorage.setItem(AUDIT_KEY,JSON.stringify(audit));}
+function log(action,details){audit.push({time:new Date().toLocaleString(),user:'Joseph (prototype)',action,details});save();}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===page));window.scrollTo({top:0,behavior:'smooth'});renderAll();}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+function newCasePage(){go('newcase');}
+function badge(s){let c=s==='Serious'?'serious':(s==='Non-serious'||s==='Submitted'?'good':'review');return `<span class="badge ${c}">${esc(s)}</span>`}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function renderDash(){document.getElementById('openCount').textContent=cases.filter(c=>c.status!=='Closed').length;document.getElementById('seriousCount').textContent=cases.filter(c=>c.serious==='Serious').length;document.getElementById('qcCount').textContent=cases.filter(c=>c.status==='QC').length;document.getElementById('dueCount').textContent=cases.filter(c=>c.status!=='Closed'&&c.status!=='Submitted').length>0?1:0;let arr=cases.slice().reverse().slice(0,5);document.getElementById('recent').innerHTML=arr.length?`<table><thead><tr><th>Case</th><th>Product</th><th>Event</th><th>Status</th></tr></thead><tbody>${arr.map(c=>`<tr><td><button class="secondary" onclick="selectCase('${c.id}')">${esc(c.id)}</button></td><td>${esc(c.product)}</td><td>${esc(c.event)}</td><td>${badge(c.status)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No cases.</div>';}
+function renderQueue(){let q=cases.slice();let s=(document.getElementById('search')?.value||'').toLowerCase();let f=document.getElementById('filterStatus')?.value||'';q=q.filter(c=>(!s||[c.id,c.product,c.event,c.status,c.source].join(' ').toLowerCase().includes(s))&&(!f||c.status===f));document.getElementById('queueCount').textContent=`${q.length} case${q.length===1?'':'s'}`;document.getElementById('queueTable').innerHTML=q.length?`<table><thead><tr><th>Case</th><th>Received</th><th>Product</th><th>Event</th><th>Seriousness</th><th>Status</th></tr></thead><tbody>${q.map(c=>`<tr><td><button class="secondary" onclick="selectCase('${c.id}')">${esc(c.id)}</button></td><td>${esc(c.receipt)}</td><td>${esc(c.product)}</td><td>${esc(c.event)}</td><td>${badge(c.serious)}</td><td>${badge(c.status)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No matching cases.</div>';}
+function selectCase(id){let c=cases.find(x=>x.id===id);if(!c)return;document.getElementById('caseDetail').innerHTML=`<div class="form"><div><b>Case ID</b><br>${esc(c.id)}</div><div><b>Status</b><br>${badge(c.status)}</div><div><b>Receipt date</b><br>${esc(c.receipt)}</div><div><b>Source</b><br>${esc(c.source)}</div><div><b>Product</b><br>${esc(c.product)}</div><div><b>Event</b><br>${esc(c.event)}</div><div><b>Seriousness</b><br>${badge(c.serious)}</div><div><b>Patient age</b><br>${esc(c.age||'Unknown')}</div><div class="full"><b>Narrative</b><p>${esc(c.narrative||'')}</p></div></div><div class="actions"><button class="secondary" onclick="advanceCase('${c.id}')">Advance Workflow</button><button class="secondary" onclick="openEdit('${c.id}')">Edit</button></div>`;}
+const workflow=['Triage','Data Entry','Medical Review','QC','Approved','Submitted','Closed'];
+function advanceCase(id){let c=cases.find(x=>x.id===id);if(!c)return;let i=workflow.indexOf(c.status);if(i<workflow.length-1){c.status=workflow[i+1];log('Workflow advanced',`${id} → ${c.status}`);save();renderAll();selectCase(id);}}
+function openEdit(id){let c=cases.find(x=>x.id===id);document.getElementById('modalBody').innerHTML=`<h2>Edit ${esc(c.id)}</h2><div class="form"><div><label>Product</label><input id="ep" value="${esc(c.product)}"></div><div><label>Event</label><input id="ee" value="${esc(c.event)}"></div><div><label>Seriousness</label><select id="es"><option ${c.serious==='Not yet assessed'?'selected':''}>Not yet assessed</option><option ${c.serious==='Non-serious'?'selected':''}>Non-serious</option><option ${c.serious==='Serious'?'selected':''}>Serious</option></select></div><div><label>Status</label><select id="et">${workflow.map(x=>`<option ${c.status===x?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="actions"><button class="primary" onclick="saveEdit('${id}')">Save</button></div>`;document.getElementById('modal').classList.add('show');}
+function saveEdit(id){let c=cases.find(x=>x.id===id);c.product=document.getElementById('ep').value;c.event=document.getElementById('ee').value;c.serious=document.getElementById('es').value;c.status=document.getElementById('et').value;log('Case edited',id);save();closeModal();renderAll();selectCase(id);}
+function closeModal(){document.getElementById('modal').classList.remove('show');}
+document.getElementById('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));let id='PV-'+new Date().getFullYear()+'-'+String(cases.length+1).padStart(4,'0');cases.push({id,...d,status:'Triage'});log('Case created',`${id} — ${d.product} / ${d.event}`);e.target.reset();document.getElementById('formAI').innerHTML='';save();go('queue');selectCase(id);});
+function extraction(t){let age=(t.match(/(\d{1,3})[- ]year[- ]old/i)||[])[1]||'Not identified';let product=(t.match(/(?:started|taking|received|on)\s+([A-Z][A-Za-z0-9 -]{1,40}?)(?:\s+for|\s+and|\s+\.|,)/i)||[])[1]||'Review manually';let event=(t.match(/(?:developed|reported|experienced)\s+([^.,;]+)/i)||[])[1]||'Review manually';let seriousness=/admitted|hospital|death|fatal|life-threatening|disab/i.test(t)?'Potential seriousness signal — human review required':'No obvious seriousness trigger detected';return {age,product,event,seriousness};}
+function analyzeText(){let t=document.getElementById('aiText').value.trim();if(!t)return;let x=extraction(t);document.getElementById('aiOutput').innerHTML=`<div class="ai"><b>Draft extraction</b><p>Patient age: ${esc(x.age)}</p><p>Suspect product: ${esc(x.product)}</p><p>Event: ${esc(x.event)}</p><p><b>${esc(x.seriousness)}</b></p><hr><span class="muted">Advisory only. Verify against the source before data entry.</span></div>`;log('AI analysis run','Narrative extraction');}
+function analyzeForm(){let t=document.querySelector('[name=narrative]').value.trim();document.getElementById('formAI').innerHTML=t?`<div class="ai">Draft analysis available in <b>Maple AI</b>. Final PV assessment remains with the reviewer.</div>`:`<div class="alert">Please enter a source narrative first.</div>`;}
+function renderAudit(){let a=audit.slice().reverse();document.getElementById('auditTable').innerHTML=a.length?`<table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody>${a.map(x=>`<tr><td>${esc(x.time)}</td><td>${esc(x.user)}</td><td>${esc(x.action)}</td><td>${esc(x.details)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No audit events yet.</div>';}
+function renderAll(){renderDash();renderQueue();renderAudit();}
+renderAll();
+</script>
+</body>
+</html>
