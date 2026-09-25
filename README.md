@@ -74,3 +74,24 @@ Product: **SafetyAssure**
 Subtitle: **Patient Safety • Governance • Compliance • Intelligence**
 
 No Maple branding and no Workbench branding are used in the application.
+
+
+## v2 E2B(R3) data-entry and MIS upgrade
+
+The v2 frontend expands the case workspace into an E2B(R3)-oriented structured entry form covering:
+- C — Case identification / report information
+- D — Patient characteristics
+- E — Reaction/event with repeatable reactions and seriousness criteria
+- F — Tests/procedures with repeatable results
+- G — Drug information with repeatable products, dose, route, dates, indication, action, dechallenge/rechallenge
+- H — Narrative
+- Primary source/reporter
+- Medical history / past drug history
+- Medical assessment / causality
+- Study identification
+- Transmission metadata
+- Source documents
+
+MIS now supports receipt-date range, status, seriousness and text filtering and exports a broader operational line listing including E2B-oriented identifiers, reporter qualification, patient characteristics, product/IDMP fields, MedDRA fields, seriousness/outcome, workflow, causality, study and terminology-version columns.
+
+The generated XML is deliberately labelled a **draft** and is not an ICH/EU transmission message. Production transmission must map the data model to the applicable ISO ICSR XML schema and current regional business rules and pass formal validation. The current ICH E2B(R3) Implementation Guide is Version 5.03 (18 July 2025); ICH and regional regulators publish additional implementation materials and business rules.
