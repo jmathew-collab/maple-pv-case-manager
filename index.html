@@ -1,119 +1,125 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Maple PV Case Manager v1.1</title>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Maple Safety Platform</title>
 <style>
-:root{--bg:#f4f7f6;--panel:#fff;--ink:#17231f;--muted:#64716c;--line:#dce5e1;--brand:#2f6b5d;--brand2:#e7f2ee;--danger:#a33b3b;--warn:#9a6200;--shadow:0 2px 10px #183b3512}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-header{background:#183b35;color:#fff;padding:16px max(18px,calc((100vw - 1280px)/2));display:flex;align-items:center;justify-content:space-between;gap:15px}
-.logo{font-weight:800;font-size:20px}.sub{font-size:12px;opacity:.75}
-.app{max-width:1280px;margin:auto}.tabs{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:5px;padding:10px 14px;overflow:auto}
-.tab{white-space:nowrap;border:0;background:transparent;padding:10px 14px;border-radius:9px;color:#52615c;font-weight:700;cursor:pointer}.tab.active{background:var(--brand2);color:var(--brand)}
-main{padding:20px 14px 40px}.page{display:none}.page.active{display:block}
-.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(4,1fr)}.cols{grid-template-columns:1.4fr .6fr}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:var(--shadow)}
-h1,h2,h3{margin:0 0 14px}h2{font-size:20px}h3{font-size:15px}.muted{color:var(--muted);font-size:13px}.stat .num{font-size:30px;font-weight:800;margin:6px 0}
-button{font:inherit}.primary{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:10px 14px;font-weight:750;cursor:pointer}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-weight:650;cursor:pointer}.danger{color:var(--danger)}
-.toolbar{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:13px}.toolbar input,.toolbar select{max-width:280px}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:700}
-.badge{display:inline-block;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:750;background:#eef2f0}.serious{background:#fdeaea;color:var(--danger)}.review{background:#fff3dc;color:var(--warn)}.good{background:#e8f5ee;color:#246446}
-.workflow{display:flex;gap:4px;overflow:auto;margin:8px 0 4px}.step{flex:1;min-width:105px;text-align:center;padding:10px 6px;background:#eef2f0;color:#68746f;font-size:11px;font-weight:750}.step.active{background:var(--brand);color:#fff}
-.form{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.full{grid-column:1/-1}label{display:block;font-size:12px;font-weight:750;color:#52615c;margin-bottom:5px}input,select,textarea{width:100%;border:1px solid #ccd8d3;border-radius:8px;padding:10px;background:#fff;font:inherit}textarea{min-height:110px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:15px;flex-wrap:wrap}
-.alert{padding:11px 13px;border-radius:9px;background:#fff3dc;color:#795000;font-size:13px}.success{background:#e9f6ee;color:#245e40}.ai{background:#edf7f3;border-left:4px solid var(--brand);padding:13px;border-radius:8px;font-size:13px}
-.search{flex:1;min-width:180px}.empty{text-align:center;padding:28px;color:var(--muted)}
-.modal{display:none;position:fixed;inset:0;background:#0007;z-index:20;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:14px;max-width:850px;width:100%;max-height:90vh;overflow:auto;padding:20px}.close{float:right;border:0;background:transparent;font-size:24px;cursor:pointer}
-@media(max-width:800px){.stats,.cols{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.full{grid-column:auto}.hide-mobile{display:none}}
-@media(max-width:520px){.stats{grid-template-columns:1fr 1fr}main{padding:13px 10px 30px}.card{padding:14px}.logo{font-size:17px}.sub{display:none}}
-</style>
-</head>
-<body>
-<header><div><div class="logo">🌱 Maple PV Case Manager</div><div class="sub">Pharmacovigilance case-processing prototype • v1.1</div></div><button class="secondary" onclick="newCasePage()">＋ New Case</button></header>
-<div class="app">
-<nav class="tabs" aria-label="Application navigation">
-<button class="tab active" data-page="dashboard">Dashboard</button>
-<button class="tab" data-page="newcase">New Case</button>
-<button class="tab" data-page="queue">Case Queue</button>
-<button class="tab" data-page="assistant">Maple AI</button>
-<button class="tab" data-page="audit">Audit Trail</button>
-</nav>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial;background:#f4f7f6;color:#17231f}header{background:#173c34;color:white;padding:16px 20px;font-size:20px;font-weight:800}.sub{font-size:12px;font-weight:400;opacity:.8}.nav{display:flex;overflow:auto;background:white;border-bottom:1px solid #dbe5e0}.nav button{border:0;background:white;padding:13px;font-weight:700;white-space:nowrap}.nav button.on{color:#286858;border-bottom:3px solid #286858}main{padding:15px;max-width:1300px;margin:auto}.page{display:none}.page.on{display:block}.card{background:white;border:1px solid #dbe5e0;border-radius:12px;padding:16px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}label{font-size:11px;font-weight:800;color:#52625c;display:block;margin-bottom:4px}input,select,textarea{width:100%;padding:9px;border:1px solid #cbd8d2;border-radius:7px;box-sizing:border-box}textarea{min-height:110px}.btn{padding:9px 13px;border-radius:7px;border:1px solid #ccd8d2;background:white;font-weight:700}.primary{background:#286858;color:white;border-color:#286858}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}.workflow{display:flex;overflow:auto}.step{min-width:130px;padding:10px;background:#edf1ef;text-align:center;font-size:11px;font-weight:800}.activeStep{background:#286858;color:white}.notice{padding:11px;background:#edf7f3;border-left:4px solid #286858;margin:10px 0;font-size:12px}.warn{background:#fff3dc;color:#765000}.badge{padding:4px 8px;border-radius:20px;background:#edf1ef;font-size:10px;font-weight:800}table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:9px;border-bottom:1px solid #dbe5e0;text-align:left}th{color:#66746e}.tabs{display:flex;overflow:auto;border-bottom:1px solid #dbe5e0;margin-bottom:15px}.tabs button{border:0;background:white;padding:10px;font-weight:700;white-space:nowrap}.tabs button.on{color:#286858;border-bottom:3px solid #286858}pre{white-space:pre-wrap;background:#f1f4f3;padding:12px;border-radius:8px;font-size:11px}
+@media(max-width:700px){.grid,.form{grid-template-columns:1fr}.full{grid-column:auto}}
+</style></head><body>
+<header>🌱 Maple Safety Platform<div class="sub">ICSR Workbench • ICH E2B(R3) / GVP Module VI prototype</div></header>
+<nav class="nav"><button data-p="dash">Dashboard</button><button data-p="book">Book In</button><button data-p="entry">Data Entry</button><button data-p="medical">Medical Review</button><button data-p="dist">Distribution</button><button data-p="mis">MIS / Line Listings</button><button data-p="queue">Case Queue</button></nav>
 <main>
-<section id="dashboard" class="page active">
-<div class="grid stats">
-<div class="card stat"><div class="muted">Open cases</div><div class="num" id="openCount">0</div><div class="muted">Active workflow</div></div>
-<div class="card stat"><div class="muted">Serious</div><div class="num" id="seriousCount">0</div><div class="muted">Human assessment required</div></div>
-<div class="card stat"><div class="muted">Due soon</div><div class="num" id="dueCount">0</div><div class="muted">Prototype 48-hour flag</div></div>
-<div class="card stat"><div class="muted">QC pending</div><div class="num" id="qcCount">0</div><div class="muted">Awaiting QC</div></div>
-</div>
-<div class="grid cols" style="margin-top:14px">
-<div class="card"><h2>Workflow</h2><div class="workflow"><div class="step active">Received</div><div class="step">Triage</div><div class="step">Data Entry</div><div class="step">Medical Review</div><div class="step">QC</div><div class="step">Approved</div><div class="step">Submitted</div></div><div style="margin-top:22px"><h3>Recent cases</h3><div id="recent"></div></div></div>
-<div class="card"><h2>Maple safety guardrails</h2><div class="ai"><b>Human-in-the-loop</b><br>AI suggestions are advisory only. The prototype does not make final causality, expectedness, reportability, seriousness, or regulatory decisions.</div><div style="margin-top:15px" class="muted">Learning loop: suggestion → human decision → evaluation → controlled learning record.</div></div>
-</div>
-</section>
+<section id="dash" class="page"><div class="grid"><div class="card"><b>Open</b><h1 id="open">0</h1></div><div class="card"><b>Medical Review</b><h1 id="med">0</h1></div><div class="card"><b>Distribution</b><h1 id="distn">0</h1></div></div><div class="card"><h2>Workflow</h2><div class="workflow"><div class="step activeStep">1. Book In</div><div class="step">2. Data Entry</div><div class="step">3. Medical Review</div><div class="step">4. Distribution</div><div class="step">5. Closed</div></div><div class="notice">Book In checks the four minimum ICSR validity criteria: identifiable patient, identifiable reporter, suspected product and adverse event/reaction.</div></div><div class="card"><h2>Recent cases</h2><div id="recent"></div></div></section>
 
-<section id="newcase" class="page">
-<div class="card"><h2>Create PV Case</h2><form id="caseForm"><div class="form">
-<div><label>Source / report type</label><select name="source"><option>Spontaneous report</option><option>Literature</option><option>Patient support program</option><option>Clinical study</option><option>Regulatory authority</option></select></div>
-<div><label>Initial receipt date</label><input name="receipt" type="date" required></div>
-<div><label>Patient age</label><input name="age" type="number" min="0" max="130"></div>
-<div><label>Patient sex</label><select name="sex"><option>Unknown</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+<section id="book" class="page"><div class="card"><h2>Book In — Minimum Criteria</h2><div class="notice">This gate records initial receipt and minimum ICSR information. It does not make the final reportability decision.</div><form id="bf"><div class="form">
+<div><label>Source</label><select name="source"><option>Spontaneous</option><option>Literature</option><option>Patient Support Program</option><option>Clinical Trial</option><option>Regulatory Authority</option></select></div>
+<div><label>Date first received</label><input name="receipt" type="date" required></div>
+<div><label>Country</label><input name="country" value="Canada"></div>
 <div><label>Patient identifiable?</label><select name="patient"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
 <div><label>Reporter identifiable?</label><select name="reporter"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
-<div><label>Suspect product</label><input name="product" required placeholder="e.g., Drug X"></div>
-<div><label>Indication</label><input name="indication"></div>
-<div><label>Event verbatim</label><input name="event" required placeholder="e.g., difficulty breathing"></div>
-<div><label>Event onset</label><input name="onset" type="date"></div>
-<div><label>Outcome</label><select name="outcome"><option>Unknown</option><option>Recovered/resolved</option><option>Recovering/resolving</option><option>Not recovered/not resolved</option><option>Fatal</option><option>Recovered with sequelae</option></select></div>
-<div><label>Seriousness</label><select name="serious"><option>Not yet assessed</option><option>Non-serious</option><option>Serious</option></select></div>
-<div class="full"><label>Source narrative</label><textarea name="narrative" placeholder="Paste the source report here..."></textarea></div>
-</div><div class="actions"><button type="button" class="secondary" onclick="analyzeForm()">Maple: Analyze Draft</button><button class="primary">Create Case</button></div></form><div id="formAI" style="margin-top:13px"></div></div>
-</section>
+<div><label>Suspect product identified?</label><select name="drug"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
+<div><label>Adverse event/reaction described?</label><select name="event"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
+<div><label>Source reference</label><input name="sourceRef"></div><div class="full"><label>Initial source text</label><textarea name="narrative"></textarea></div></div><div class="actions"><button class="btn primary">Book In & Validate</button></div></form><div id="bookmsg"></div></div></section>
 
-<section id="queue" class="page">
-<div class="card"><div class="toolbar"><div><h2 style="margin-bottom:3px">Case Queue</h2><div class="muted" id="queueCount"></div></div><input id="search" class="search" placeholder="Search case, product, event..." oninput="renderQueue()"><select id="filterStatus" onchange="renderQueue()"><option value="">All statuses</option><option>Triage</option><option>Data Entry</option><option>Medical Review</option><option>QC</option><option>Approved</option><option>Submitted</option><option>Closed</option></select></div><div id="queueTable"></div></div>
-<div class="card" style="margin-top:14px"><h2>Selected case</h2><div id="caseDetail" class="empty">Select a case from the queue.</div></div>
-</section>
+<section id="entry" class="page"><div class="card"><h2>Data Entry — ICSR</h2><select id="ec" onchange="renderEntry()"></select><div id="entrybody"></div></div></section>
+<section id="medical" class="page"><div class="card"><h2>Medical Review</h2><select id="mc" onchange="renderMed()"></select><div id="medbody"></div></div></section>
+<section id="dist" class="page"><div class="card"><h2>Distribution</h2><select id="dc" onchange="renderDist()"></select><div id="distbody"></div></div></section>
 
-<section id="assistant" class="page">
-<div class="card"><h2>Maple AI Assistant</h2><p class="muted">Prototype extraction from source narrative. Verify every suggestion against the original source.</p><textarea id="aiText" placeholder="Example: A 67-year-old female started Drug X for hypertension. Two days later she developed difficulty breathing and was admitted to hospital."></textarea><div class="actions"><button class="primary" onclick="analyzeText()">Analyze Narrative</button></div><div id="aiOutput" style="margin-top:14px"></div></div>
-</section>
+<section id="mis" class="page"><div class="card">
+<h2>MIS / Safety Line Listings</h2>
+<div class="notice">Management Information System prototype for case surveillance and line-listing. Use filters to define the reporting population, then export the displayed listing.</div>
+<div class="form" style="margin-top:14px">
+<div><label>Date from</label><input id="misFrom" type="date" onchange="renderMIS()"></div>
+<div><label>Date to</label><input id="misTo" type="date" onchange="renderMIS()"></div>
+<div><label>Status</label><select id="misStatus" onchange="renderMIS()"><option value="">All</option><option>Book In</option><option>Data Entry</option><option>Medical Review</option><option>Distribution</option><option>Closed</option></select></div>
+<div><label>Seriousness</label><select id="misSerious" onchange="renderMIS()"><option value="">All</option><option>Serious</option><option>Non-serious</option><option>Not yet assessed</option></select></div>
+<div><label>Source</label><select id="misSource" onchange="renderMIS()"><option value="">All</option><option>Spontaneous</option><option>Literature</option><option>Patient Support Program</option><option>Clinical Trial</option><option>Regulatory Authority</option></select></div>
+<div><label>Country</label><input id="misCountry" placeholder="e.g. Canada" oninput="renderMIS()"></div>
+<div><label>Product</label><input id="misProduct" placeholder="Product name" oninput="renderMIS()"></div>
+<div><label>Event / MedDRA PT</label><input id="misEvent" placeholder="Event or PT" oninput="renderMIS()"></div>
+<div><label>Search</label><input id="misSearch" placeholder="Case ID, reporter, substance..." oninput="renderMIS()"></div>
+</div>
+<div class="actions" style="justify-content:flex-start">
+<button class="btn" onclick="clearMIS()">Clear filters</button>
+<button class="btn" onclick="exportMISCSV()">Export CSV</button>
+</div>
+<div id="misSummary" class="notice" style="margin-top:14px"></div>
+<div id="misTable" style="margin-top:12px"></div>
+</div></section>
 
-<section id="audit" class="page"><div class="card"><h2>Audit Trail</h2><div id="auditTable"></div></div></section>
-</main></div>
-
-<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
-
+<section id="queue" class="page"><div class="card"><h2>Case Queue</h2><input id="search" placeholder="Search..." oninput="renderQueue()"><div id="qt"></div></div></section>
+</main>
 <script>
-const CASE_KEY='maplePV_v11_cases', AUDIT_KEY='maplePV_v11_audit';
-let cases=JSON.parse(localStorage.getItem(CASE_KEY)||'null');
-let audit=JSON.parse(localStorage.getItem(AUDIT_KEY)||'[]');
-if(!cases){cases=[
-{id:'PV-2026-0001',receipt:'2026-09-21',product:'Drug X',event:'Dyspnea',serious:'Serious',status:'Medical Review',source:'Spontaneous report',narrative:'Prototype seeded case.'},
-{id:'PV-2026-0002',receipt:'2026-09-22',product:'Drug Y',event:'Rash',serious:'Non-serious',status:'Data Entry',source:'Spontaneous report',narrative:'Prototype seeded case.'},
-{id:'PV-2026-0003',receipt:'2026-09-23',product:'Drug Z',event:'Nausea',serious:'Not yet assessed',status:'Triage',source:'Patient support program',narrative:'Prototype seeded case.'}];save();}
-function save(){localStorage.setItem(CASE_KEY,JSON.stringify(cases));localStorage.setItem(AUDIT_KEY,JSON.stringify(audit));}
-function log(action,details){audit.push({time:new Date().toLocaleString(),user:'Joseph (prototype)',action,details});save();}
-function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===page));window.scrollTo({top:0,behavior:'smooth'});renderAll();}
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
-function newCasePage(){go('newcase');}
-function badge(s){let c=s==='Serious'?'serious':(s==='Non-serious'||s==='Submitted'?'good':'review');return `<span class="badge ${c}">${esc(s)}</span>`}
-function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function renderDash(){document.getElementById('openCount').textContent=cases.filter(c=>c.status!=='Closed').length;document.getElementById('seriousCount').textContent=cases.filter(c=>c.serious==='Serious').length;document.getElementById('qcCount').textContent=cases.filter(c=>c.status==='QC').length;document.getElementById('dueCount').textContent=cases.filter(c=>c.status!=='Closed'&&c.status!=='Submitted').length>0?1:0;let arr=cases.slice().reverse().slice(0,5);document.getElementById('recent').innerHTML=arr.length?`<table><thead><tr><th>Case</th><th>Product</th><th>Event</th><th>Status</th></tr></thead><tbody>${arr.map(c=>`<tr><td><button class="secondary" onclick="selectCase('${c.id}')">${esc(c.id)}</button></td><td>${esc(c.product)}</td><td>${esc(c.event)}</td><td>${badge(c.status)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No cases.</div>';}
-function renderQueue(){let q=cases.slice();let s=(document.getElementById('search')?.value||'').toLowerCase();let f=document.getElementById('filterStatus')?.value||'';q=q.filter(c=>(!s||[c.id,c.product,c.event,c.status,c.source].join(' ').toLowerCase().includes(s))&&(!f||c.status===f));document.getElementById('queueCount').textContent=`${q.length} case${q.length===1?'':'s'}`;document.getElementById('queueTable').innerHTML=q.length?`<table><thead><tr><th>Case</th><th>Received</th><th>Product</th><th>Event</th><th>Seriousness</th><th>Status</th></tr></thead><tbody>${q.map(c=>`<tr><td><button class="secondary" onclick="selectCase('${c.id}')">${esc(c.id)}</button></td><td>${esc(c.receipt)}</td><td>${esc(c.product)}</td><td>${esc(c.event)}</td><td>${badge(c.serious)}</td><td>${badge(c.status)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No matching cases.</div>';}
-function selectCase(id){let c=cases.find(x=>x.id===id);if(!c)return;document.getElementById('caseDetail').innerHTML=`<div class="form"><div><b>Case ID</b><br>${esc(c.id)}</div><div><b>Status</b><br>${badge(c.status)}</div><div><b>Receipt date</b><br>${esc(c.receipt)}</div><div><b>Source</b><br>${esc(c.source)}</div><div><b>Product</b><br>${esc(c.product)}</div><div><b>Event</b><br>${esc(c.event)}</div><div><b>Seriousness</b><br>${badge(c.serious)}</div><div><b>Patient age</b><br>${esc(c.age||'Unknown')}</div><div class="full"><b>Narrative</b><p>${esc(c.narrative||'')}</p></div></div><div class="actions"><button class="secondary" onclick="advanceCase('${c.id}')">Advance Workflow</button><button class="secondary" onclick="openEdit('${c.id}')">Edit</button></div>`;}
-const workflow=['Triage','Data Entry','Medical Review','QC','Approved','Submitted','Closed'];
-function advanceCase(id){let c=cases.find(x=>x.id===id);if(!c)return;let i=workflow.indexOf(c.status);if(i<workflow.length-1){c.status=workflow[i+1];log('Workflow advanced',`${id} → ${c.status}`);save();renderAll();selectCase(id);}}
-function openEdit(id){let c=cases.find(x=>x.id===id);document.getElementById('modalBody').innerHTML=`<h2>Edit ${esc(c.id)}</h2><div class="form"><div><label>Product</label><input id="ep" value="${esc(c.product)}"></div><div><label>Event</label><input id="ee" value="${esc(c.event)}"></div><div><label>Seriousness</label><select id="es"><option ${c.serious==='Not yet assessed'?'selected':''}>Not yet assessed</option><option ${c.serious==='Non-serious'?'selected':''}>Non-serious</option><option ${c.serious==='Serious'?'selected':''}>Serious</option></select></div><div><label>Status</label><select id="et">${workflow.map(x=>`<option ${c.status===x?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="actions"><button class="primary" onclick="saveEdit('${id}')">Save</button></div>`;document.getElementById('modal').classList.add('show');}
-function saveEdit(id){let c=cases.find(x=>x.id===id);c.product=document.getElementById('ep').value;c.event=document.getElementById('ee').value;c.serious=document.getElementById('es').value;c.status=document.getElementById('et').value;log('Case edited',id);save();closeModal();renderAll();selectCase(id);}
-function closeModal(){document.getElementById('modal').classList.remove('show');}
-document.getElementById('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));let id='PV-'+new Date().getFullYear()+'-'+String(cases.length+1).padStart(4,'0');cases.push({id,...d,status:'Triage'});log('Case created',`${id} — ${d.product} / ${d.event}`);e.target.reset();document.getElementById('formAI').innerHTML='';save();go('queue');selectCase(id);});
-function extraction(t){let age=(t.match(/(\d{1,3})[- ]year[- ]old/i)||[])[1]||'Not identified';let product=(t.match(/(?:started|taking|received|on)\s+([A-Z][A-Za-z0-9 -]{1,40}?)(?:\s+for|\s+and|\s+\.|,)/i)||[])[1]||'Review manually';let event=(t.match(/(?:developed|reported|experienced)\s+([^.,;]+)/i)||[])[1]||'Review manually';let seriousness=/admitted|hospital|death|fatal|life-threatening|disab/i.test(t)?'Potential seriousness signal — human review required':'No obvious seriousness trigger detected';return {age,product,event,seriousness};}
-function analyzeText(){let t=document.getElementById('aiText').value.trim();if(!t)return;let x=extraction(t);document.getElementById('aiOutput').innerHTML=`<div class="ai"><b>Draft extraction</b><p>Patient age: ${esc(x.age)}</p><p>Suspect product: ${esc(x.product)}</p><p>Event: ${esc(x.event)}</p><p><b>${esc(x.seriousness)}</b></p><hr><span class="muted">Advisory only. Verify against the source before data entry.</span></div>`;log('AI analysis run','Narrative extraction');}
-function analyzeForm(){let t=document.querySelector('[name=narrative]').value.trim();document.getElementById('formAI').innerHTML=t?`<div class="ai">Draft analysis available in <b>Maple AI</b>. Final PV assessment remains with the reviewer.</div>`:`<div class="alert">Please enter a source narrative first.</div>`;}
-function renderAudit(){let a=audit.slice().reverse();document.getElementById('auditTable').innerHTML=a.length?`<table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody>${a.map(x=>`<tr><td>${esc(x.time)}</td><td>${esc(x.user)}</td><td>${esc(x.action)}</td><td>${esc(x.details)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No audit events yet.</div>';}
-function renderAll(){renderDash();renderQueue();renderAudit();}
-renderAll();
-</script>
-</body>
-</html>
+const K="mapleSafetyCases";let C=JSON.parse(localStorage.getItem(K)||"[]"),tab="case";
+const tabs={case:"Case / C",patient:"Patient / D",reporter:"Reporter / C.2",event:"Reaction / E",drug:"Drug / G",tests:"Tests / F",narrative:"Narrative / H",assessment:"Assessment",followup:"Follow-up"};
+const esc=x=>String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+function save(){localStorage.setItem(K,JSON.stringify(C))}
+function go(p){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("on",x.id===p));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("on",x.dataset.p===p));render();if(p==="entry")renderEntry();if(p==="medical")renderMed();if(p==="dist")renderDist()}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.p));
+function opt(id){let e=document.getElementById(id);e.innerHTML=C.map(c=>`<option value="${c.id}">${c.id} — ${esc(c.drugName||"No product")} — ${c.status}</option>`).join("")}
+function current(id){let v=document.getElementById(id)?.value;return C.find(c=>c.id===v)||C[0]}
+function render(){document.getElementById("open").textContent=C.filter(c=>c.status!=="Closed").length;document.getElementById("med").textContent=C.filter(c=>c.status==="Medical Review").length;document.getElementById("distn").textContent=C.filter(c=>c.status==="Distribution").length;let a=C.slice(-6).reverse();document.getElementById("recent").innerHTML=a.length?`<table><tr><th>Case</th><th>Product</th><th>Event</th><th>Status</th></tr>${a.map(c=>`<tr><td>${c.id}</td><td>${esc(c.drugName||"—")}</td><td>${esc(c.eventPT||c.eventVerbatim||"—")}</td><td>${c.status}</td></tr>`).join("")}</table>`:"No cases yet";renderQueue();if(document.getElementById("mis"))renderMIS();if(document.getElementById("ec")){opt("ec");opt("mc");opt("dc")}}
+function valid(c){return c.patient==="Yes"&&c.reporter==="Yes"&&c.drug==="Yes"&&c.event==="Yes"}
+document.getElementById("bf").onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));let c={id:"MAPLE-"+new Date().getFullYear()+"-"+String(C.length+1).padStart(5,"0"),...d,status:"Book In",valid:valid(d),patientAge:"",patientSex:"Unknown",reporterName:"",reporterQualification:"",reporterCountry:d.country,eventVerbatim:"",eventPT:"",eventLLT:"",eventSOC:"",eventOutcome:"Unknown",drugName:"",drugSubstance:"",drugMPID:"",drugRole:"Suspect",drugRoute:"",drugDose:"",drugFrequency:"",drugStart:"",drugStop:"",batch:"",indication:"",tests:"",history:"",concomitant:"",narrative:d.narrative||"",causalityMethod:"",causalityResult:"",causalityRationale:""};C.push(c);save();document.getElementById("bookmsg").innerHTML=c.valid?`<div class="notice">✓ ${c.id} is valid against the four minimum criteria and is ready for Data Entry.</div>`:`<div class="notice warn">⚠ ${c.id} does not meet all four minimum criteria and remains at Book In.</div>`;e.target.reset();render()};
+function field(n,l,v,t="text"){return `<div><label>${l}</label><input name="${n}" type="${t}" value="${esc(v)}"></div>`}
+function renderEntry(){if(!C.length){document.getElementById("entrybody").innerHTML="No cases";return}let c=current("ec");let nav=Object.entries(tabs).map(([k,v])=>`<button class="${tab===k?"on":""}" onclick="tab='${k}';renderEntry()">${v}</button>`).join("");let p="";
+if(tab==="case")p=`<div class="form">${field("receipt","Date first received",c.receipt,"date")}${field("country","Country",c.country)}${field("source","Source",c.source)}${field("sourceRef","Source reference",c.sourceRef)}<div><label>ICSR validity</label><input value="${c.valid?"Valid":"Not valid"}" disabled></div></div>`;
+if(tab==="patient")p=`<div class="form">${field("patientAge","Age",c.patientAge,"number")}${field("patientSex","Sex",c.patientSex)}${field("birthDate","Date of birth",c.birthDate||"","date")}${field("patientWeight","Weight",c.patientWeight||"")}${field("patientHeight","Height",c.patientHeight||"")}<div class="full"><label>Medical history</label><textarea name="history">${esc(c.history)}</textarea></div></div>`;
+if(tab==="reporter")p=`<div class="form">${field("reporterName","Reporter name",c.reporterName)}${field("reporterQualification","Qualification",c.reporterQualification)}${field("reporterCountry","Country",c.reporterCountry)}${field("reporterContact","Contact",c.reporterContact||"")}${field("senderOrg","Sender organization",c.senderOrg||"")}${field("senderId","Sender identifier",c.senderId||"")}</div>`;
+if(tab==="event")p=`<div class="form">${field("eventVerbatim","Verbatim reaction/event",c.eventVerbatim)}${field("eventPT","MedDRA PT",c.eventPT)}${field("eventLLT","MedDRA LLT",c.eventLLT)}${field("eventSOC","MedDRA SOC",c.eventSOC)}${field("eventStart","Start date",c.eventStart||"","date")}${field("eventEnd","End date",c.eventEnd||"","date")}<div><label>Outcome</label><select name="eventOutcome"><option>${c.eventOutcome}</option><option>Recovered/resolved</option><option>Recovering/resolving</option><option>Not recovered/not resolved</option><option>Fatal</option></select></div><div><label>Seriousness</label><select name="seriousness"><option>${c.seriousness||"Not yet assessed"}</option><option>Serious</option><option>Non-serious</option></select></div></div><div class="notice">MedDRA fields are integration points. A licensed/current terminology source is required for production.</div>`;
+if(tab==="drug")p=`<div class="form">${field("drugName","Medicinal product name",c.drugName)}${field("drugSubstance","Active substance",c.drugSubstance)}${field("drugMPID","IDMP/product identifier",c.drugMPID)}${field("drugRole","Drug role",c.drugRole)}${field("drugRoute","Route",c.drugRoute)}${field("drugDose","Dose",c.drugDose)}${field("drugFrequency","Frequency",c.drugFrequency)}${field("drugStart","Therapy start",c.drugStart,"date")}${field("drugStop","Therapy stop",c.drugStop,"date")}${field("batch","Batch/lot",c.batch)}${field("indication","Indication",c.indication)}</div><div class="notice">IDMP-compatible fields are provided; do not invent identifiers. Connect an authorized product/IDMP source for production.</div>`;
+if(tab==="tests")p=`<div class="form"><div class="full"><label>Tests / procedures / results</label><textarea name="tests">${esc(c.tests)}</textarea></div></div>`;
+if(tab==="narrative")p=`<div class="form"><div class="full"><label>Case narrative — H</label><textarea name="narrative" style="min-height:230px">${esc(c.narrative)}</textarea></div><div class="full"><label>Additional information</label><textarea name="additional">${esc(c.additional||"")}</textarea></div></div>`;
+if(tab==="assessment")p=`<div class="form">${field("expectedness","Expectedness",c.expectedness||"Not assessed")}${field("causalityMethod","Causality method",c.causalityMethod)}${field("causalityResult","Causality conclusion",c.causalityResult)}${field("medReviewer","Reviewer",c.medReviewer)}${field("reviewDate","Review date",c.reviewDate,"date")}<div class="full"><label>Rationale</label><textarea name="causalityRationale">${esc(c.causalityRationale)}</textarea></div></div>`;
+if(tab==="followup")p=`<div class="form">${field("followupNeeded","Follow-up needed",c.followupNeeded||"No")}<div class="full"><label>Questions / missing information</label><textarea name="followupQuestions">${esc(c.followupQuestions||"")}</textarea></div></div>`;
+document.getElementById("entrybody").innerHTML=`<div class="tabs">${nav}</div>${p}<div class="actions"><button class="btn" onclick="saveEntry()">Save</button><button class="btn primary" onclick="routeMedical()">Route to Medical Review →</button></div>`}
+function saveEntry(){let c=current("ec");document.querySelectorAll("#entrybody input[name],#entrybody select[name],#entrybody textarea[name]").forEach(x=>c[x.name]=x.value);if(c.valid&&c.status==="Book In")c.status="Data Entry";save();renderEntry();render()}
+function routeMedical(){let c=current("ec");if(!c.valid){alert("Complete the four minimum ICSR criteria before routing.");return}saveEntry();c.status="Medical Review";save();go("medical");document.getElementById("mc").value=c.id;renderMed()}
+function renderMed(){if(!C.length)return;let c=current("mc");document.getElementById("medbody").innerHTML=`<div class="form">${field("medReviewer","Reviewer",c.medReviewer)}${field("reviewDate","Review date",c.reviewDate,"date")}<div><label>Causality method</label><select id="cm"><option>WHO-UMC</option><option>Naranjo</option><option>Company method</option><option>Other</option></select></div><div><label>Conclusion</label><select id="cr"><option>Not assessed</option><option>Unlikely</option><option>Possible</option><option>Probable</option><option>Very likely</option><option>Certain</option></select></div><div class="full"><label>Rationale</label><textarea id="cra">${esc(c.causalityRationale)}</textarea></div></div><div class="notice">Medical review records the qualified reviewer's clinical assessment. Maple does not independently determine causality.</div><div class="actions"><button class="btn primary" onclick="finishMed()">Save & Route to Distribution →</button></div>`}
+function finishMed(){let c=current("mc");c.medReviewer=document.querySelector("#medbody input[name=medReviewer]").value;c.reviewDate=document.querySelector("#medbody input[name=reviewDate]").value;c.causalityMethod=document.getElementById("cm").value;c.causalityResult=document.getElementById("cr").value;c.causalityRationale=document.getElementById("cra").value;c.status="Distribution";save();go("dist");document.getElementById("dc").value=c.id;renderDist()}
+function makeXML(c){let v=x=>esc(x||"");return `<?xml version="1.0" encoding="UTF-8"?>\n<ichicsr lang="en" xmlns="urn:ich:ichicsr">\n  <safetyreport>\n    <safetyreportid>${v(c.id)}</safetyreportid>\n    <receivedateformat>102</receivedateformat>\n    <receivedate>${v((c.receipt||"").replaceAll("-",""))}</receivedate>\n    <primarysource><reportercountry>${v(c.reporterCountry||c.country)}</reportercountry></primarysource>\n    <patient>\n      <patientonsetage>${v(c.patientAge)}</patientonsetage>\n      <reaction><reactionmeddrallt>${v(c.eventLLT)}</reactionmeddrallt><reactionoutcome>${v(c.eventOutcome)}</reactionoutcome></reaction>\n      <drug><medicinalproduct>${v(c.drugName)}</medicinalproduct><drugdosagetext>${v(c.drugDose)}</drugdosagetext><drugadministrationroute>${v(c.drugRoute)}</drugadministrationroute><drugbatchnumb>${v(c.batch)}</drugbatchnumb></drug>\n    </patient>\n    <summary><narrativeincludeclinical>${v(c.narrative)}</narrativeincludeclinical></summary>\n  </safetyreport>\n</ichicsr>`}
+function dl(name,text,type){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
+function renderDist(){if(!C.length)return;let c=current("dc"),xml=makeXML(c);document.getElementById("distbody").innerHTML=`<div class="notice">Prototype distribution only. Validate against the applicable ICH/EU/regional rules before any real submission.</div><div class="actions" style="justify-content:flex-start"><button class="btn" onclick="cioms()">Download CIOMS-style HTML</button><button class="btn primary" onclick="dl('${c.id}_E2B_R3.xml',makeXML(current('dc')),'application/xml')">Download ICH E2B(R3) XML</button></div><h3>XML preview</h3><pre>${esc(xml)}</pre>`}
+function cioms(){let c=current("dc");let h=`<html><body><h1>CIOMS-style ICSR — Prototype</h1><p><b>Not an official CIOMS form.</b></p><table>${[['Case',c.id],['Receipt',c.receipt],['Source',c.source],['Patient age',c.patientAge],['Product',c.drugName],['Event',c.eventVerbatim||c.eventPT],['Seriousness',c.seriousness],['Outcome',c.eventOutcome],['Causality',c.causalityResult],['Narrative',c.narrative]].map(r=>'<tr><th>'+esc(r[0])+'</th><td>'+esc(r[1])+'</td></tr>').join('')}</table></body></html>`;dl(c.id+"_CIOMS_style.html",h,"text/html")}
+
+function misRows(){
+  let from=document.getElementById("misFrom")?.value||"", to=document.getElementById("misTo")?.value||"";
+  let st=document.getElementById("misStatus")?.value||"", se=document.getElementById("misSerious")?.value||"";
+  let so=document.getElementById("misSource")?.value||"", co=(document.getElementById("misCountry")?.value||"").toLowerCase();
+  let pr=(document.getElementById("misProduct")?.value||"").toLowerCase(), ev=(document.getElementById("misEvent")?.value||"").toLowerCase();
+  let q=(document.getElementById("misSearch")?.value||"").toLowerCase();
+  return C.filter(c=>{
+    let date=c.receipt||"";
+    return (!from||date>=from)&&(!to||date<=to)&&(!st||c.status===st)&&(!se||(c.seriousness||"Not yet assessed")===se)&&
+      (!so||c.source===so)&&(!co||String(c.country||"").toLowerCase().includes(co))&&
+      (!pr||[c.drugName,c.drugSubstance,c.drugMPID].join(" ").toLowerCase().includes(pr))&&
+      (!ev||[c.eventVerbatim,c.eventPT,c.eventLLT,c.eventSOC].join(" ").toLowerCase().includes(ev))&&
+      (!q||JSON.stringify(c).toLowerCase().includes(q));
+  });
+}
+function renderMIS(){
+  let a=misRows(), serious=a.filter(c=>c.seriousness==="Serious").length;
+  document.getElementById("misSummary").textContent=`${a.length} cases in listing • ${serious} serious • ${a.filter(c=>c.status==="Medical Review").length} in Medical Review • ${a.filter(c=>c.status==="Distribution").length} in Distribution`;
+  document.getElementById("misTable").innerHTML=a.length?`<table><tr>
+    <th>Case ID</th><th>Receipt</th><th>Country</th><th>Source</th><th>Patient</th><th>Product</th><th>Substance</th><th>Event / PT</th><th>Seriousness</th><th>Outcome</th><th>Status</th><th>Causality</th>
+  </tr>${a.map(c=>`<tr>
+    <td>${esc(c.id)}</td><td>${esc(c.receipt)}</td><td>${esc(c.country)}</td><td>${esc(c.source)}</td>
+    <td>${esc(c.patientAge||"Unknown")} / ${esc(c.patientSex||"Unknown")}</td><td>${esc(c.drugName||"")}</td><td>${esc(c.drugSubstance||"")}</td>
+    <td>${esc(c.eventPT||c.eventVerbatim||"")}</td><td>${esc(c.seriousness||"Not yet assessed")}</td><td>${esc(c.eventOutcome||"Unknown")}</td>
+    <td>${esc(c.status)}</td><td>${esc(c.causalityResult||"Not assessed")}</td>
+  </tr>`).join("")}</table>`:'<div class="empty">No cases match the selected MIS filters.</div>';
+}
+function clearMIS(){
+  ["misFrom","misTo","misCountry","misProduct","misEvent","misSearch"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("misStatus").value=""; document.getElementById("misSerious").value=""; document.getElementById("misSource").value="";
+  renderMIS();
+}
+function csvCell(x){return '"'+String(x??"").replace(/"/g,'""')+'"'}
+function exportMISCSV(){
+  let a=misRows();
+  let headers=["Case ID","Receipt Date","Country","Source","Patient Age","Patient Sex","Product","Active Substance","IDMP/Product ID","Event Verbatim","MedDRA PT","MedDRA LLT","MedDRA SOC","Seriousness","Outcome","Status","Causality Method","Causality Result","Reporter Qualification"];
+  let rows=a.map(c=>[c.id,c.receipt,c.country,c.source,c.patientAge,c.patientSex,c.drugName,c.drugSubstance,c.drugMPID,c.eventVerbatim,c.eventPT,c.eventLLT,c.eventSOC,c.seriousness,c.eventOutcome,c.status,c.causalityMethod,c.causalityResult,c.reporterQualification]);
+  let text=[headers,...rows].map(r=>r.map(csvCell).join(",")).join("\\n");
+  dl("Maple_MIS_Line_Listing_"+new Date().toISOString().slice(0,10)+".csv",text,"text/csv");
+}
+
+function renderQueue(){let s=(document.getElementById("search")?.value||"").toLowerCase(),a=C.filter(c=>JSON.stringify(c).toLowerCase().includes(s));document.getElementById("qt").innerHTML=a.length?`<table><tr><th>Case</th><th>Product</th><th>Event</th><th>Status</th></tr>${a.map(c=>`<tr><td>${c.id}</td><td>${esc(c.drugName||"—")}</td><td>${esc(c.eventPT||c.eventVerbatim||"—")}</td><td>${c.status}</td></tr>`).join("")}</table>`:"No cases"}
+go("dash");
+</script></body></html>
