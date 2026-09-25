@@ -1,0 +1,2 @@
+# GitHub Pages can publish the root of this repository.
+# The included .nojekyll file keeps this a plain static site.
